@@ -1,0 +1,17 @@
+{
+  "name": "stopwatch-timer",
+  "version": "1.0.0",
+  "description": "Stopwatch & Timer MVP — LiDR",
+  "private": true,
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui"
+  },
+  "devDependencies": {
+    "vitest": "^3.1.1",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "jsdom": "^26.1.0"
+  }
+}
