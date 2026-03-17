@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Stopwatch & Timer — Track time and set countdowns with presets and Pomodoro mode.">
+  <title>Stopwatch & Timer | LiDR</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- ============================================
+       LANDING: Feature selector (shown on first load)
+       ============================================ -->
+  <div id="landing" class="landing" role="main" aria-label="Choose a feature">
+    <div class="landing__brand">
+      <span class="landing__logo" aria-hidden="true">⏱</span>
+      <h1 class="landing__title">Stopwatch <span class="landing__amp">&amp;</span> Timer</h1>
+      <p class="landing__subtitle">What would you like to use?</p>
+    </div>
+    <div class="landing__cards">
+      <button
+        class="landing__card landing__card--stopwatch"
+        id="landing-stopwatch-btn"
+        aria-label="Open Stopwatch"
+      >
+        <span class="landing__card-icon" aria-hidden="true">⏱</span>
+        <span class="landing__card-label">Stopwatch</span>
+        <span class="landing__card-desc">Count up &amp; track elapsed time</span>
+      </button>
+      <button
+        class="landing__card landing__card--timer"
+        id="landing-timer-btn"
+        aria-label="Open Timer"
+      >
+        <span class="landing__card-icon" aria-hidden="true">⏳</span>
+        <span class="landing__card-label">Timer</span>
+        <span class="landing__card-desc">Countdown with presets &amp; alerts</span>
+      </button>
+    </div>
+    <p class="landing__footer">Powered by <strong>LiDR</strong></p>
+  </div>
+
+  <!-- ============================================
+       APP: Main application shell
+       ============================================ -->
+  <div id="app" class="app hidden" role="application" aria-label="Stopwatch and Timer application">
+
+    <!-- Navigation tabs -->
+    <nav class="nav" aria-label="Feature navigation">
+      <ul class="nav__list" role="tablist">
+        <li role="presentation">
+          <button
+            class="nav__tab nav__tab--active"
+            id="tab-stopwatch"
+            role="tab"
+            aria-selected="true"
+            aria-controls="panel-stopwatch"
+            tabindex="0"
+          >
+            <span class="nav__tab-icon" aria-hidden="true">⏱</span>
+            Stopwatch
+            <span class="nav__tab-status" id="stopwatch-status-dot" aria-label="Stopwatch running" hidden></span>
+          </button>
+        </li>
+        <li role="presentation">
+          <button
+            class="nav__tab"
+            id="tab-timer"
+            role="tab"
+            aria-selected="false"
+            aria-controls="panel-timer"
+            tabindex="-1"
+          >
+            <span class="nav__tab-icon" aria-hidden="true">⏳</span>
+            Timer
+            <span class="nav__tab-status" id="timer-status-dot" aria-label="Timer running" hidden></span>
+          </button>
+        </li>
+      </ul>
+      <div class="nav__indicator" id="nav-indicator" aria-hidden="true"></div>
+    </nav>
+
+    <!-- ======== STOPWATCH PANEL ======== -->
+    <section
+      class="panel panel--active"
+      id="panel-stopwatch"
+      role="tabpanel"
+      aria-labelledby="tab-stopwatch"
+    >
+      <div class="display">
+        <div class="display__time" aria-live="polite" aria-atomic="true" id="stopwatch-display">
+          <span class="display__main">00:00:00</span><span class="display__ms">.000</span>
+        </div>
+      </div>
+      <div class="controls">
+        <button
+          class="btn btn--primary"
+          id="stopwatch-start-btn"
+          aria-label="Start stopwatch"
+        >
+          Start
+        </button>
+        <button
+          class="btn btn--danger"
+          id="stopwatch-reset-btn"
+          aria-label="Reset stopwatch"
+        >
+          Reset
+        </button>
+      </div>
+    </section>
+
+    <!-- ======== TIMER PANEL ======== -->
+    <section
+      class="panel"
+      id="panel-timer"
+      role="tabpanel"
+      aria-labelledby="tab-timer"
+      hidden
+    >
+      <!-- Time input -->
+      <div class="timer-input" id="timer-input-group">
+        <fieldset class="timer-input__fieldset">
+          <legend class="sr-only">Set countdown time</legend>
+          <div class="timer-input__fields">
+            <label class="timer-input__label">
+              <span class="timer-input__unit">HH</span>
+              <input
+                class="timer-input__field"
+                id="timer-hours"
+                type="number"
+                min="0"
+                max="23"
+                value="0"
+                aria-label="Hours (0-23)"
+                inputmode="numeric"
+              >
+            </label>
+            <span class="timer-input__sep" aria-hidden="true">:</span>
+            <label class="timer-input__label">
+              <span class="timer-input__unit">MM</span>
+              <input
+                class="timer-input__field"
+                id="timer-minutes"
+                type="number"
+                min="0"
+                max="59"
+                value="0"
+                aria-label="Minutes (0-59)"
+                inputmode="numeric"
+              >
+            </label>
+            <span class="timer-input__sep" aria-hidden="true">:</span>
+            <label class="timer-input__label">
+              <span class="timer-input__unit">SS</span>
+              <input
+                class="timer-input__field"
+                id="timer-seconds"
+                type="number"
+                min="0"
+                max="59"
+                value="0"
+                aria-label="Seconds (0-59)"
+                inputmode="numeric"
+              >
+            </label>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- Presets -->
+      <div class="presets" role="group" aria-label="Quick presets">
+        <button class="preset-btn" data-minutes="5" aria-label="Set 5 minute timer">5 min</button>
+        <button class="preset-btn" data-minutes="10" aria-label="Set 10 minute timer">10 min</button>
+        <button class="preset-btn" data-minutes="15" aria-label="Set 15 minute timer">15 min</button>
+        <button class="preset-btn preset-btn--pomodoro" data-minutes="25" data-autostart="true" aria-label="Start 25 minute Pomodoro timer">
+          🍅 Pomodoro time!
+        </button>
+      </div>
+
+      <!-- Timer display -->
+      <div class="display" id="timer-display-container">
+        <div class="display__time" aria-live="polite" aria-atomic="true" id="timer-display">
+          <span class="display__main">00:00:00</span><span class="display__ms">.000</span>
+        </div>
+        <div class="timer-progress" id="timer-progress" aria-hidden="true">
+          <svg class="timer-progress__svg" viewBox="0 0 200 200">
+            <circle class="timer-progress__bg" cx="100" cy="100" r="90" />
+            <circle class="timer-progress__fill" id="timer-progress-fill" cx="100" cy="100" r="90" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls">
+        <button
+          class="btn btn--primary"
+          id="timer-start-btn"
+          aria-label="Start timer"
+        >
+          Start
+        </button>
+        <button
+          class="btn btn--danger"
+          id="timer-reset-btn"
+          aria-label="Reset timer"
+        >
+          Reset
+        </button>
+      </div>
+
+      <!-- Validation message -->
+      <p class="validation-msg hidden" id="timer-validation" role="alert">
+        Please set a valid time greater than 00:00:00
+      </p>
+
+      <!-- Completion notification (modal) -->
+      <div class="notification hidden" id="timer-notification" role="alertdialog" aria-label="Timer complete">
+        <div class="notification__content">
+          <span class="notification__icon" aria-hidden="true">🔔</span>
+          <h2 class="notification__title">Time's up!</h2>
+          <p class="notification__text">Your countdown has finished.</p>
+          <button class="btn btn--primary notification__dismiss" id="notification-dismiss-btn">
+            Ok!
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="app-footer">
+      <p>Powered by <strong>LiDR</strong></p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
